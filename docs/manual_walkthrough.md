@@ -78,3 +78,15 @@ Verify that the project infrastructure is correctly set up and ready for develop
         - A "Go" button.
     - **Action**: Enter "Test Reach" and "100+00", then click "Go".
     - **Verify**: A message appears below the button: "Navigating to [Selected Feeder] (Reach: Test Reach) @ 100+00".
+
+## Phase 4 Verification: Core Logic (Feeder Population)
+
+1.  **Automated Verification**
+    - Run `npm test`.
+    - Expected: All tests pass, including `tests/feederService.test.ts` which verifies the API interaction logic against mocks.
+
+2.  **Manual Verification (Network)**
+    - Configure the widget with a valid "Feeder Name Layer URL" that points to a MapService layer containing `FFNAME` and `FFCODE` fields.
+    - Run the widget.
+    - **Verify**: The "Feeder" dropdown automatically populates with sorted values from the service.
+    - **Verify**: If the URL is broken, an error message "Error loading feeders..." appears in the message area.
