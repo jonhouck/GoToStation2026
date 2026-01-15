@@ -79,14 +79,27 @@ Verify that the project infrastructure is correctly set up and ready for develop
     - **Action**: Enter "Test Reach" and "100+00", then click "Go".
     - **Verify**: A message appears below the button: "Navigating to [Selected Feeder] (Reach: Test Reach) @ 100+00".
 
-## Phase 4 Verification: Core Logic (Feeder Population)
+## Phase 4 Verification: Core Logic
 
-1.  **Automated Verification**
+### Phase 4.1: Feeder Population
+1.  **Automated Verification**:
     - Run `npm test`.
-    - Expected: All tests pass, including `tests/feederService.test.ts` which verifies the API interaction logic against mocks.
+    - Ensure `tests/feederService.test.ts` passes.
 
-2.  **Manual Verification (Network)**
-    - Configure the widget with a valid "Feeder Name Layer URL" that points to a MapService layer containing `FFNAME` and `FFCODE` fields.
-    - Run the widget.
-    - **Verify**: The "Feeder" dropdown automatically populates with sorted values from the service.
-    - **Verify**: If the URL is broken, an error message "Error loading feeders..." appears in the message area.
+2.  **Manual Verification**:
+    - Configure the widget with a valid "Feeder Name Layer URL".
+    - **Verify**: The "Feeder" dropdown automatically populates with sorted values.
+    - **Verify**: If the URL is broken, an error message appears.
+
+### Phase 4.2: Route Traversal
+1.  **Automated Verification**:
+    - Run `npm test`.
+    - Ensure `tests/routeService.test.ts` passes.
+
+2.  **Manual Verification**:
+    - **Scenario A**: Select Feeder, Enter Station (e.g., 100). Click Go.
+        - Expected: Success message "Found X locations" (check console for Point object).
+    - **Scenario B**: Select Feeder, Enter Reach (e.g., 1), Enter Station.
+        - Expected: Success message specific to that reach.
+    - **Scenario C**: Invalid Station.
+        - Expected: "Invalid station value" message.
