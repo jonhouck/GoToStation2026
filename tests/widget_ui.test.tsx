@@ -13,6 +13,13 @@ vi.mock('jimu-ui', () => ({
     Label: (props: any) => <label>{props.children}</label>
 }))
 
+// Mock FeederService
+vi.mock('../WidgetTemplate/src/runtime/services/feederService', () => ({
+    getFeeders: vi.fn().mockResolvedValue([
+        { label: 'Mock Feeder', value: 'mock' }
+    ])
+}))
+
 describe('Widget UI', () => {
     it('renders all required inputs', () => {
         // Mock props

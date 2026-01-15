@@ -20,6 +20,7 @@
 import { React, type AllWidgetProps } from 'jimu-core'
 import type { IMConfig } from '../config'
 import { Select, Option, TextInput, Button, Label } from 'jimu-ui'
+import { getFeeders } from './services/feederService'
 
 interface State {
   feeders: Array<{ label: string, value: string }>
@@ -38,6 +39,18 @@ export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>
       reach: '',
       station: '',
       message: ''
+    }
+  }
+
+  async componentDidMount() {
+    if (this.props.config.feederUrl) {
+      try {
+        const feeders = await getFeeders(this.props.config.feederUrl)
+        this.setState({ feeders })
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error)
+        this.setState({ message: 'Error loading feeders: ' + errorMessage })
+      }
     }
   }
 
@@ -76,7 +89,6 @@ export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>
                 </Option>
               ))}
               {/* Temporary mock option for UI testing until Phase 4 */}
-              {this.state.feeders.length === 0 && <Option value="mock-feeder">Mock Feeder A</Option>}
             </Select>
           </Label>
         </div>
