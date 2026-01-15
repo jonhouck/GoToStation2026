@@ -17,7 +17,7 @@
   A copy of the license is available in the repository's
   LICENSE file.
 */
-import { React, FormattedMessage, defaultMessages as jimuCoreDefaultMessage, type AllWidgetProps, css } from 'jimu-core'
+import { React, FormattedMessage, defaultMessages as jimuCoreDefaultMessage, type AllWidgetProps } from 'jimu-core'
 import type { IMConfig } from '../config'
 import { Tabs, Tab, Button } from 'jimu-ui'
 import defaultMessages from './translations/default'
@@ -25,19 +25,24 @@ import { styled } from 'jimu-theme'
 
 export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>, unknown> {
   nls = (id: string) => {
-    return this.props.intl ? this.props.intl.formatMessage({ id: id, defaultMessage: defaultMessages[id] }) : id
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return this.props.intl ? this.props.intl.formatMessage({ id: id, defaultMessage: (defaultMessages as any)[id] }) : id
   }
 
   render() {
+    /*
     const styleLiteral = css`
       color: ${this.props.theme.sys.color.error.light};
       font-size: 1.25rem;
     `
+    */
 
+    /*
     const styleObject = {
       backgroundColor: this.props.theme.sys.color.surface.background,
       padding: '1rem'
     }
+    */
 
     const StyledButton = styled.button`
       color: white;
@@ -63,16 +68,18 @@ export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>
       }
     `
 
+    /*
     const rtlStyle = css`
       border: solid 1px;
       width: 100px;
       padding-left: 20px;
     `
+    */
 
     const propsTr = Object.keys(this.props).map((prop, i) => {
       if (['manifest', 'user', 'intl'].includes(prop) ||
         typeof this.props[prop] === 'string') {
-        return <tr key={i}><td>{prop}</td><td>{this.props[prop] && this.props[prop].toString()}</td></tr>
+        return <tr key={i}><td>{prop}</td><td>{/* this.props[prop] && this.props[prop].toString() */}</td></tr>
       }
 
       return <tr key={i}>
@@ -91,7 +98,7 @@ export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>
           <div className="content"><FormattedMessage id="ok" defaultMessage={jimuCoreDefaultMessage.ok}></FormattedMessage></div>
           <hr />
           {/* demo how to use theme variables */}
-          <div css={styleLiteral}><span css={styleObject}>Theme danger color</span></div>
+          {/* <div css={styleLiteral}><span css={styleObject}>Theme danger color</span></div> */}
           <br />
 
           <StyledButton>A styled HTML Button</StyledButton>
@@ -102,7 +109,7 @@ export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>
           <br />
           <br />
 
-          <div css={rtlStyle}>right to left demo</div>
+          {/* <div css={rtlStyle}>right to left demo</div> */}
           <br />
           <br />
 

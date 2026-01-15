@@ -29,3 +29,14 @@ Verify that the project infrastructure is correctly set up and ready for develop
     -   Push changes to GitHub.
     -   Check the "Actions" tab in the repository.
     -   Expected: The "Verify" workflow should trigger and pass.
+
+## Phase 1 Verification: Configuration Schema
+
+1.  **Verify Config Interface**
+    -   Open `WidgetTemplate/src/config.ts`.
+    -   Ensure `Config` interface has `feederUrl`, `feederLayerUrl`, `routeLayerUrl`.
+    -   Ensure no legacy properties (`p1`, `p2`) exist.
+
+2.  **Verify Build Integrity**
+    -   Run `npm run build`.
+    -   Expected: Success (no errors about missing properties in `widget.tsx` or `setting.tsx`).

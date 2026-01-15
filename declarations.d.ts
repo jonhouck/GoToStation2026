@@ -1,12 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 declare module 'jimu-core' {
-    import React from 'react';
-    export { React };
+    export const React: any;
     export type AllWidgetProps<T> = any;
     export const FormattedMessage: any;
     export const defaultMessages: any;
     export const css: any;
     export const jsx: any;
+    export type ImmutableObject<T> = T & {
+        set: (key: string, val: any) => ImmutableObject<T>;
+    }
+}
+
+declare module 'react' {
+    interface Attributes {
+        css?: any;
+    }
+    interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
+        css?: any;
+    }
 }
 
 declare module 'jimu-ui' {
