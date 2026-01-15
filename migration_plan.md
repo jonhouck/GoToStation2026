@@ -16,8 +16,8 @@ The following phases must be executed sequentially.
 | :--- | :--- | :--- |
 | **0. Infrastructure** | None | **[COMPLETE]** ✅ Initialize GitHub, CI/CD, and Linting. |
 | **1. Configuration** | Phase 0 | **[COMPLETE]** ✅ Define data interfaces for Feeders and Routes. |
-| **2. Settings Experience** | Phase 1 | Build the sidebar settings for users to input Service URLs. |
-| **3. Widget UI (Frontend)** | Phase 1 | Build the React UI (Dropdowns, Inputs) using Jimu UI components. |
+| **2. Settings Experience** | Phase 1 | **[COMPLETE]** ✅ Build the sidebar settings for users to input Service URLs. |
+| **3. Widget UI (Frontend)** | Phase 1 | **[COMPLETE]** ✅ Build the React UI (Dropdowns, Inputs) using Jimu UI components. |
 | **4. Core Logic (Backend)** | Phase 3 | Port interpolation algorithms and query logic to ArcGIS JS API 4.x. |
 | **5. Map Integration** | Phase 4 | Connect logic to the active Map View to render graphics. |
 
@@ -60,7 +60,7 @@ The following phases must be executed sequentially.
         -   `geometryServiceUrl`: string (Optional, for fallback projection)
     -   *Reference Legacy*: `GoToStationLEGACY/config.json`
 
-### Phase 2: Settings Experience
+### Phase 2: Settings Experience (✅ COMPLETE)
 **Goal**: Allow the user to configure the widget in the Experience Builder builder interface.
 
 1.  **Implement `src/setting/setting.tsx`**:
@@ -71,7 +71,7 @@ The following phases must be executed sequentially.
         -   Route Layer URL
     -   Save values to `props.config`.
 
-### Phase 3: Widget UI Scaffolding
+### Phase 3: Widget UI Scaffolding (✅ COMPLETE)
 **Goal**: Create the visual interface for the end-user.
 
 1.  **Implement `src/runtime/widget.tsx`**:

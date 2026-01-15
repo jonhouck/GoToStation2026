@@ -17,123 +17,106 @@
   A copy of the license is available in the repository's
   LICENSE file.
 */
-import { React, FormattedMessage, defaultMessages as jimuCoreDefaultMessage, type AllWidgetProps } from 'jimu-core'
+import { React, type AllWidgetProps } from 'jimu-core'
 import type { IMConfig } from '../config'
-import { Tabs, Tab, Button } from 'jimu-ui'
-import defaultMessages from './translations/default'
-import { styled } from 'jimu-theme'
+import { Select, Option, TextInput, Button, Label } from 'jimu-ui'
 
-export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>, unknown> {
-  nls = (id: string) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this.props.intl ? this.props.intl.formatMessage({ id: id, defaultMessage: (defaultMessages as any)[id] }) : id
+interface State {
+  feeders: Array<{ label: string, value: string }>
+  selectedFeeder: string
+  reach: string
+  station: string
+  message: string
+}
+
+export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>, State> {
+  constructor(props: AllWidgetProps<IMConfig>) {
+    super(props)
+    this.state = {
+      feeders: [],
+      selectedFeeder: '',
+      reach: '',
+      station: '',
+      message: ''
+    }
+  }
+
+  onFeederChange = (evt: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({ selectedFeeder: evt.target.value })
+  }
+
+  onReachChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ reach: evt.target.value })
+  }
+
+  onStationChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ station: evt.target.value })
+  }
+
+  onGoClick = () => {
+    // Placeholder for Phase 4 logic
+    this.setState({ message: `Navigating to ${this.state.selectedFeeder} (Reach: ${this.state.reach}) @ ${this.state.station}` })
   }
 
   render() {
-    /*
-    const styleLiteral = css`
-      color: ${this.props.theme.sys.color.error.light};
-      font-size: 1.25rem;
-    `
-    */
+    return (
+      <div className="widget-go-to-station jimu-widget" style={{ padding: '1rem', overflow: 'auto' }}>
+        <div style={{ marginBottom: '1rem' }}>
+          <Label>
+            Feeder
+            <Select
+              onChange={this.onFeederChange}
+              value={this.state.selectedFeeder}
+              placeholder="Select a Feeder"
+              style={{ width: '100%', marginTop: '0.25rem' }}
+            >
+              {this.state.feeders.map((feeder: { label: string, value: string }) => (
+                <Option key={feeder.value} value={feeder.value}>
+                  {feeder.label}
+                </Option>
+              ))}
+              {/* Temporary mock option for UI testing until Phase 4 */}
+              {this.state.feeders.length === 0 && <Option value="mock-feeder">Mock Feeder A</Option>}
+            </Select>
+          </Label>
+        </div>
 
-    /*
-    const styleObject = {
-      backgroundColor: this.props.theme.sys.color.surface.background,
-      padding: '1rem'
-    }
-    */
+        <div style={{ marginBottom: '1rem' }}>
+          <Label>
+            Reach (Optional)
+            <TextInput
+              onChange={this.onReachChange}
+              value={this.state.reach}
+              placeholder="e.g. 1"
+              style={{ width: '100%', marginTop: '0.25rem' }}
+            />
+          </Label>
+        </div>
 
-    const StyledButton = styled.button`
-      color: white;
-      background-color: ${this.props.theme.sys.color.primary.light};
-      transition: 0.15s ease-in all;
-      &:hover {
-        background-color: ${this.props.theme.sys.color.primary.dark};
-      }
-    `
+        <div style={{ marginBottom: '1rem' }}>
+          <Label>
+            Station
+            <TextInput
+              onChange={this.onStationChange}
+              value={this.state.station}
+              placeholder="e.g. 100+00"
+              style={{ width: '100%', marginTop: '0.25rem' }}
+            />
+          </Label>
+        </div>
 
-    const StyledBSButton = styled(Button)`
-      background-color: hotpink !important;
-      border: 0 !important;
-      transition: 0.15s ease-in all;
-      &:hover {
-        background-color: purple !important;
-      }
-    `
+        <div style={{ marginBottom: '1rem' }}>
+          <Button type="primary" onClick={this.onGoClick} style={{ width: '100%' }}>
+            Go
+          </Button>
+        </div>
 
-    const styleTag = `
-      .danger-color {
-        color: red;
-      }
-    `
-
-    /*
-    const rtlStyle = css`
-      border: solid 1px;
-      width: 100px;
-      padding-left: 20px;
-    `
-    */
-
-    const propsTr = Object.keys(this.props).map((prop, i) => {
-      if (['manifest', 'user', 'intl'].includes(prop) ||
-        typeof this.props[prop] === 'string') {
-        return <tr key={i}><td>{prop}</td><td>{/* this.props[prop] && this.props[prop].toString() */}</td></tr>
-      }
-
-      return <tr key={i}>
-        <td>{prop}</td>
-        <td>
-          {
-            JSON.stringify(this.props[prop], null, 2)
-          }
-        </td></tr>
-    })
-
-    return <div className="widget-demo jimu-widget" style={{ overflow: 'auto' }}>
-      <Tabs>
-        <Tab id="widgetProperties" title={this.nls('widgetProperties')}>
-          <div className="title font-weight-bold">NLS messages from jimu-core (OK)</div>
-          <div className="content"><FormattedMessage id="ok" defaultMessage={jimuCoreDefaultMessage.ok}></FormattedMessage></div>
-          <hr />
-          {/* demo how to use theme variables */}
-          {/* <div css={styleLiteral}><span css={styleObject}>Theme danger color</span></div> */}
-          <br />
-
-          <StyledButton>A styled HTML Button</StyledButton>
-          <br />
-          <br />
-
-          <StyledBSButton>A Re-styled Button Component</StyledBSButton>
-          <br />
-          <br />
-
-          {/* <div css={rtlStyle}>right to left demo</div> */}
-          <br />
-          <br />
-
-          <style>
-            {styleTag}
-          </style>
-          <p className="danger-color">
-            Text color is from a named CSS class
-          </p>
-          {/* demo how to format string by call API */}
-          <div className="title font-weight-bold"><FormattedMessage id="widgetName" defaultMessage={defaultMessages.widgetName} /></div>
-          <div className="content">{this.props.intl.formatMessage({ id: '_widgetLabel', defaultMessage: defaultMessages._widgetLabel })}</div>
-
-          <div className="title font-weight-bold"><FormattedMessage id="widgetProps" defaultMessage={defaultMessages.widgetProps} /></div>
-          <div className="content">
-            <table>
-              <tbody>{propsTr}</tbody>
-            </table>
+        {this.state.message && (
+          <div className="message-area" style={{ marginTop: '1rem', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px' }}>
+            {this.state.message}
           </div>
-        </Tab>
-        <Tab id="widgetFunctions" title={this.nls('widgetFunctions')}>
-          <p>TODO</p>
-        </Tab>
-      </Tabs>
-    </div>
+        )}
+      </div>
+    )
   }
 }

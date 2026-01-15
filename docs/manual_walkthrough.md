@@ -59,4 +59,22 @@ Verify that the project infrastructure is correctly set up and ready for develop
         - "Feeder Detail Layer URL"
         - "Route Layer URL"
     - **Action**: Type values into these fields.
-    - **Verify**: The values persist when closing/reopening the settings.
+
+## Phase 3 Verification: Widget UI
+
+1.  **Automated Verification**
+    - Run `npm run lint`.
+    - Expected: No errors (after fixing initial type issues).
+    - Run `npx vitest run tests/widget_ui.test.tsx`.
+    - Expected: Tests pass, confirming inputs and buttons render and interactive state works (using mocks).
+
+2.  **Manual UI Verification (In Experience Builder)**
+    - *Prerequisite: Widget is deployed to an Experience Builder instance.*
+    - Open your Experience.
+    - **Verify**: The widget displays:
+        - A "Feeder" dropdown (Placeholder "Select a Feeder").
+        - A "Reach" text input (Optional, placeholder "e.g. 1").
+        - A "Station" text input (Required, placeholder "e.g. 100+00").
+        - A "Go" button.
+    - **Action**: Enter "Test Reach" and "100+00", then click "Go".
+    - **Verify**: A message appears below the button: "Navigating to [Selected Feeder] (Reach: Test Reach) @ 100+00".

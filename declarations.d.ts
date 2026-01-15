@@ -21,10 +21,13 @@ declare module 'react' {
 }
 
 declare module 'jimu-ui' {
+    export const TextInput: any;
+    export const Button: any;
+    export const Select: any;
+    export const Option: any;
+    export const Label: any;
     export const Tabs: any;
     export const Tab: any;
-    export const Button: any;
-    export const TextInput: any;
 }
 
 declare module 'jimu-ui/advanced/setting-components' {
