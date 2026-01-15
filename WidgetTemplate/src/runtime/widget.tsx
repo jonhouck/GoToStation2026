@@ -48,7 +48,8 @@ export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>
         const feeders = await getFeeders(this.props.config.feederUrl)
         this.setState({ feeders })
       } catch (error) {
-        this.setState({ message: 'Error loading feeders: ' + (error as any).message })
+        const errorMessage = error instanceof Error ? error.message : String(error)
+        this.setState({ message: 'Error loading feeders: ' + errorMessage })
       }
     }
   }

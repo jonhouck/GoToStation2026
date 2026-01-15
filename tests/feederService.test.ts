@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi } from 'vitest'
 import { getFeeders } from '../WidgetTemplate/src/runtime/services/feederService'
 import * as query from '@arcgis/core/rest/query'
