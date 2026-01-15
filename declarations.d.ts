@@ -24,6 +24,12 @@ declare module 'jimu-ui' {
     export const Tabs: any;
     export const Tab: any;
     export const Button: any;
+    export const TextInput: any;
+}
+
+declare module 'jimu-ui/advanced/setting-components' {
+    export const SettingSection: any;
+    export const SettingRow: any;
 }
 
 declare module 'jimu-theme' {

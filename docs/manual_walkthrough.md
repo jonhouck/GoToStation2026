@@ -40,3 +40,23 @@ Verify that the project infrastructure is correctly set up and ready for develop
 2.  **Verify Build Integrity**
     -   Run `npm run build`.
     -   Expected: Success (no errors about missing properties in `widget.tsx` or `setting.tsx`).
+
+## Phase 2 Verification: Settings Experience
+
+1.  **Automated Verification**
+    - Run `npm run lint`.
+    - Expected: No errors.
+    - Run `npx vitest run --environment jsdom`.
+    - Expected: `tests/setting.test.tsx` passes, confirming that the settings UI renders the correct inputs and updates the configuration state.
+
+2.  **Manual UI Verification (In Experience Builder)**
+    - *Prerequisite: Widget is deployed to an Experience Builder instance.*
+    - Open the Experience Builder builder interface.
+    - Drag the "Go To Station" widget onto the canvas.
+    - Open the widget settings panel (Sidebar).
+    - **Verify**: You should see a section "Map Services" with three text inputs:
+        - "Feeder Name Layer URL"
+        - "Feeder Detail Layer URL"
+        - "Route Layer URL"
+    - **Action**: Type values into these fields.
+    - **Verify**: The values persist when closing/reopening the settings.

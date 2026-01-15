@@ -1,37 +1,52 @@
-/**
-  Licensing
-
-  Copyright 2020 Esri
-
-  Licensed under the Apache License, Version 2.0 (the "License"); You
-  may not use this file except in compliance with the License. You may
-  obtain a copy of the License at
-  http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-  implied. See the License for the specific language governing
-  permissions and limitations under the License.
-
-  A copy of the license is available in the repository's
-  LICENSE file.
-*/
 import { React } from 'jimu-core'
 import type { AllWidgetSettingProps } from 'jimu-for-builder'
+import { SettingSection, SettingRow } from 'jimu-ui/advanced/setting-components'
+import { TextInput } from 'jimu-ui'
 import type { IMConfig } from '../config'
+import defaultMessages from './translations/default'
 
 export default class Setting extends React.PureComponent<AllWidgetSettingProps<IMConfig>, unknown> {
-  onFeederUrlChange = (evt: React.FormEvent<HTMLInputElement>) => {
+  updateConfig = (key: string, value: string) => {
     this.props.onSettingChange({
       id: this.props.id,
-      config: this.props.config.set('feederUrl', evt.currentTarget.value)
+      config: this.props.config.set(key, value)
     })
+  }
+
+  onFeederUrlChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    this.updateConfig('feederUrl', evt.target.value)
+  }
+
+  onFeederLayerUrlChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    this.updateConfig('feederLayerUrl', evt.target.value)
+  }
+
+  onRouteLayerUrlChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    this.updateConfig('routeLayerUrl', evt.target.value)
   }
 
   render() {
     return <div className="widget-setting-demo">
-      <div>Feeder URL: <input defaultValue={this.props.config.feederUrl} onChange={this.onFeederUrlChange} /></div>
+      <SettingSection title="Map Services">
+        <SettingRow label={defaultMessages.feederUrl}>
+          <TextInput
+            value={this.props.config.feederUrl || ''}
+            onChange={this.onFeederUrlChange}
+          />
+        </SettingRow>
+        <SettingRow label={defaultMessages.feederLayerUrl}>
+          <TextInput
+            value={this.props.config.feederLayerUrl || ''}
+            onChange={this.onFeederLayerUrlChange}
+          />
+        </SettingRow>
+        <SettingRow label={defaultMessages.routeLayerUrl}>
+          <TextInput
+            value={this.props.config.routeLayerUrl || ''}
+            onChange={this.onRouteLayerUrlChange}
+          />
+        </SettingRow>
+      </SettingSection>
     </div>
   }
 }

@@ -15,7 +15,7 @@ The following phases must be executed sequentially.
 | Phase | Dependency | Description |
 | :--- | :--- | :--- |
 | **0. Infrastructure** | None | **[COMPLETE]** ✅ Initialize GitHub, CI/CD, and Linting. |
-| **1. Configuration** | Phase 0 | Define data interfaces for Feeders and Routes. |
+| **1. Configuration** | Phase 0 | **[COMPLETE]** ✅ Define data interfaces for Feeders and Routes. |
 | **2. Settings Experience** | Phase 1 | Build the sidebar settings for users to input Service URLs. |
 | **3. Widget UI (Frontend)** | Phase 1 | Build the React UI (Dropdowns, Inputs) using Jimu UI components. |
 | **4. Core Logic (Backend)** | Phase 3 | Port interpolation algorithms and query logic to ArcGIS JS API 4.x. |
@@ -49,7 +49,7 @@ The following phases must be executed sequentially.
         -   Run `npm test` (Unit tests).
         -   Run `npm run build` (Verify compilation).
 
-### Phase 1: Configuration Schema
+### Phase 1: Configuration Schema (✅ COMPLETE)
 **Goal**: Replicate the legacy `config.json` structure in the strict TypeScript environment of Experience Builder.
 
 1.  **Update `src/config.ts`**:
