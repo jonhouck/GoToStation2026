@@ -2,7 +2,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { findStationOnRoute } from '../WidgetTemplate/src/runtime/services/routeService'
 import * as query from '@arcgis/core/rest/query'
-import Point from '@arcgis/core/geometry/Point'
 
 // Mock executeQueryJSON
 vi.mock('@arcgis/core/rest/query', () => ({
