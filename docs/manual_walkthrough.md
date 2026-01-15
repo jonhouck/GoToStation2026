@@ -103,3 +103,15 @@ Verify that the project infrastructure is correctly set up and ready for develop
         - Expected: Success message specific to that reach.
     - **Scenario C**: Invalid Station.
         - Expected: "Invalid station value" message.
+
+### Phase 4.3: Coordinate Projection
+1.  **Automated Verification**:
+    - Run `npm test`.
+    - Ensure `tests/geometryUtils.test.ts` passes.
+
+2.  **Manual Verification**:
+    - **Scenario**: Perform a successful Route Traversal.
+    - **Check Console**:
+        - Look for "Found locations (Original)" log.
+        - Look for "Found locations (Projected)" log.
+        - Verify the Projected points have `wkid: 102100` (Web Mercator).

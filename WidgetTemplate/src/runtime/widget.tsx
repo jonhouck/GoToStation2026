@@ -22,6 +22,8 @@ import type { IMConfig } from '../config'
 import { Select, Option, TextInput, Button, Label } from 'jimu-ui'
 import { getFeeders } from './services/feederService'
 import { findStationOnRoute } from './services/routeService'
+import { projectPoint } from './services/geometryUtils'
+import SpatialReference from '@arcgis/core/geometry/SpatialReference'
 
 interface State {
   feeders: Array<{ label: string, value: string }>
@@ -94,8 +96,22 @@ export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>
       if (results.length === 0) {
         this.setState({ message: 'Could not find reach or station out of range.' })
       } else {
-        // Log results for Phase 4 verification
-        console.log('Found locations:', results)
+        // Project points for Phase 4.3 verification
+        // Note: In Phase 5 we will get the actual View SR. For now default to Web Mercator (102100).
+        const targetSR = new SpatialReference({ wkid: 102100 })
+        const geometryServiceUrl = this.props.config.geometryServiceUrl || 'https://sampleserver6.arcgisonline.com/arcgis/rest/services/Utilities/Geometry/GeometryServer'
+
+        const projectedPoints = await Promise.all(results.map(async (point) => {
+          try {
+            return await projectPoint(point, targetSR, geometryServiceUrl)
+          } catch (e) {
+            console.error('Failed to project point:', e)
+            return point // Return original if projection fails (fallback)
+          }
+        }))
+
+        console.log('Found locations (Original):', results)
+        console.log('Found locations (Projected):', projectedPoints)
         this.setState({ message: `Success! Found ${results.length} location(s). See console for details.` })
       }
     } catch (error) {
