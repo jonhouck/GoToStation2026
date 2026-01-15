@@ -1,0 +1,23 @@
+{
+  "name": "IMDC",
+  "2D": true,
+  "3D": false,
+  "platform": "HTML",
+  "version": "2.5",
+  "wabVersion": "2.5",
+  "author": "",
+  "description": "IMDC custom widget",
+  "copyright": "",
+  "properties": {
+		"inPanel":true,
+		"hasLocale": false,
+		"hasStyle":true,
+		"hasConfig":true,
+		"hasUIFile":true,
+		"hasSettingPage":false,
+		"hasSettingUIFile":false,
+		"hasSettingLocale":false,
+		"hasSettingStyle":false,
+		"IsController":false
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "feeder_names": {
+    "url": "https://gis.mwdh2o.com/arcgisgv/rest/services/IMDC/GoToStation_Mainline/MapServer/0",
+    "ffcode_field": "FFCODE",
+    "name_display_field": "FFNAME"
+  },
+  "feeder_layer": {
+    "name": "feeder_layer",
+    "url": "https://gis.mwdh2o.com/arcgisgv/rest/services/IMDC/GoToStation/FeatureServer/0",
+    "display_field": "FFCODE",
+    "relate_field": "FFCODE"
+  },
+  "route_layer": {
+    "name": "route_layer",
+    "url": "https://gis.mwdh2o.com/arcgisgv/rest/services/IMDC/GoToStation/FeatureServer/1",
+    "display_field": "ROUTEREACH",
+    "relate_field": "ROUTEREACH"
+  },
+  "route_noreach": {
+    "name": "route_noreach",
+    "url": "https://gis.mwdh2o.com/arcgisgv/rest/services/IMDC/GoToStation/FeatureServer/2",
+    "display_field": "FFCODE"
+  },
+  "zoomLevel": 15
+}
