@@ -21,6 +21,7 @@ import { React, type AllWidgetProps } from 'jimu-core'
 import type { IMConfig } from '../config'
 import { Select, Option, TextInput, Button, Label } from 'jimu-ui'
 import { getFeeders } from './services/feederService'
+import { findStationOnRoute } from './services/routeService'
 
 interface State {
   feeders: Array<{ label: string, value: string }>
@@ -66,9 +67,41 @@ export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>
     this.setState({ station: evt.target.value })
   }
 
-  onGoClick = () => {
-    // Placeholder for Phase 4 logic
-    this.setState({ message: `Navigating to ${this.state.selectedFeeder} (Reach: ${this.state.reach}) @ ${this.state.station}` })
+  onGoClick = async () => {
+    const { selectedFeeder, reach, station } = this.state
+
+    if (!selectedFeeder || !station) {
+      this.setState({ message: 'Please select a feeder and enter a station.' })
+      return
+    }
+
+    const cleanStation = parseFloat(station.replace('+', ''))
+    if (isNaN(cleanStation)) {
+      this.setState({ message: 'Invalid station value.' })
+      return
+    }
+
+    this.setState({ message: 'Searching...' })
+
+    try {
+      const results = await findStationOnRoute(
+        this.props.config.routeLayerUrl,
+        selectedFeeder,
+        cleanStation,
+        reach
+      )
+
+      if (results.length === 0) {
+        this.setState({ message: 'Could not find reach or station out of range.' })
+      } else {
+        // Log results for Phase 4 verification
+        console.log('Found locations:', results)
+        this.setState({ message: `Success! Found ${results.length} location(s). See console for details.` })
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      this.setState({ message: 'Error querying route: ' + errorMessage })
+    }
   }
 
   render() {

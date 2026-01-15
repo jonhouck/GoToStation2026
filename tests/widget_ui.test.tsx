@@ -15,9 +15,16 @@ vi.mock('jimu-ui', () => ({
 
 // Mock FeederService
 vi.mock('../WidgetTemplate/src/runtime/services/feederService', () => ({
-    getFeeders: vi.fn().mockResolvedValue([
-        { label: 'Mock Feeder', value: 'mock' }
-    ])
+    getFeeders: vi.fn().mockImplementation(() => {
+        console.log('Mock getFeeders called')
+        return Promise.resolve([
+            { label: 'Mock Feeder', value: 'mock' }
+        ])
+    })
+}))
+
+vi.mock('../WidgetTemplate/src/runtime/services/routeService', () => ({
+    findStationOnRoute: vi.fn().mockResolvedValue([])
 }))
 
 describe('Widget UI', () => {
@@ -64,22 +71,30 @@ describe('Widget UI', () => {
         expect(stationInput.getAttribute('value')).toBe('100+00')
     })
 
-    it('displays message on Go click', () => {
+    it('displays message on Go click', async () => {
         const props: any = {
-            config: {},
+            config: { feederUrl: 'mock' },
             theme: {}
         }
         render(<Widget {...props} /> as any)
 
-        // Set some values first (simulating user input) - note: directly setting state is hard in black-box test, 
-        // so we rely on the component's internal state update via fireEvent which we verified above.
-        const reachInput = screen.getAllByTestId('text-input')[0]
-        fireEvent.change(reachInput, { target: { value: 'TestReach' } })
+        // Wait for feeders to load
+        await screen.findByText('Mock Feeder')
+
+        // Select Feeder
+        const select = screen.getByTestId('select')
+        fireEvent.change(select, { target: { value: 'mock' } })
+
+        // Enter Station
+        const inputs = screen.getAllByTestId('text-input')
+        const stationInput = inputs[1]
+        fireEvent.change(stationInput, { target: { value: '100' } })
 
         const goBtn = screen.getByText('Go')
         fireEvent.click(goBtn)
 
-        expect(screen.getByText(/Navigating to/)).toBeDefined()
-        expect(screen.getByText(/TestReach/)).toBeDefined()
+        // Since findStationOnRoute mocks returning [], we expect the "Could not find" message
+        // We use findByText to wait for the async state update
+        expect(await screen.findByText(/Could not find reach/)).toBeDefined()
     })
 })
