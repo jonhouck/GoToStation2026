@@ -18,6 +18,7 @@
   LICENSE file.
 */
 export default {
-  p1: 'Property 1',
-  p2: 'Property 2'
+  feederUrl: 'Feeder Name Layer URL',
+  feederLayerUrl: 'Feeder Detail Layer URL',
+  routeLayerUrl: 'Route Layer URL'
 }
