@@ -92,14 +92,14 @@ The following phases must be executed sequentially.
 ### Phase 4: Core Logic Migration (The "Brain")
 **Goal**: Port the Dojo/3.x logic to React/4.x.
 
-1.  **Feeder Name Population (`_initSelect` equivalent)**:
+1.  **Feeder Name Population (`_initSelect` equivalent)**: **[COMPLETE]** ✅
     -   **Hook**: Use `useEffect` on widget load.
     -   **Query**: Use `esri/rest/query` (replacing `esri/tasks/QueryTask`).
         -   Target: `config.feederUrl`.
         -   Params: `where: "1=1"`, `outFields: ["FFNAME", "FFCODE"]`, `returnDistinctValues: true`.
     -   **Transform**: Map results to `{ label: attr.FFNAME, value: attr.FFCODE }` and update state.
 
-2.  **Route Traversal Logic (`_onCalculateButton` equivalent)**:
+2.  **Route Traversal Logic (`_onCalculateButton` equivalent)**: **[COMPLETE]** ✅
     -   **Trigger**: `onClick` of Go Button.
     -   **Query**: Use `esri/rest/query.executeQueryJSON`.
         -   Target: `config.routeLayerUrl`.
@@ -112,7 +112,7 @@ The following phases must be executed sequentially.
         -   Legacy logic iterates vertices `[x, y, m]`.
         -   **Task**: Copy the `_interpolatePoint` logic from Legacy `Widget.js` (lines 203-241) but adapt for 4.x `Polyline` paths structure.
 
-3.  **Coordinate Interpolation**:
+3.  **Coordinate Interpolation**: **[COMPLETE]** ✅
     -   Implement the math to find the segment where `Station` M-value falls between `Vertex A` (m1) and `Vertex B` (m2).
     -   Linear Interpolation formula:
         ```javascript
