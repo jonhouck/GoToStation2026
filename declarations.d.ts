@@ -33,6 +33,7 @@ declare module 'jimu-ui' {
 declare module 'jimu-ui/advanced/setting-components' {
     export const SettingSection: any;
     export const SettingRow: any;
+    export const MapWidgetSelector: any;
 }
 
 declare module 'jimu-theme' {
@@ -41,4 +42,9 @@ declare module 'jimu-theme' {
 
 declare module 'jimu-for-builder' {
     export type AllWidgetSettingProps<T> = any;
+}
+
+declare module 'jimu-arcgis' {
+    export const JimuMapViewComponent: any;
+    export type JimuMapView = any;
 }

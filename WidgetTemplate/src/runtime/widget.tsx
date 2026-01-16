@@ -24,6 +24,11 @@ import { getFeeders } from './services/feederService'
 import { findStationOnRoute } from './services/routeService'
 import { projectPoint } from './services/geometryUtils'
 import SpatialReference from '@arcgis/core/geometry/SpatialReference'
+import { JimuMapViewComponent, type JimuMapView } from 'jimu-arcgis'
+import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer'
+import Layer from '@arcgis/core/layers/Layer'
+import Graphic from '@arcgis/core/Graphic'
+import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol'
 
 interface State {
   feeders: Array<{ label: string, value: string }>
@@ -31,6 +36,7 @@ interface State {
   reach: string
   station: string
   message: string
+  jimuMapView: JimuMapView
 }
 
 export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>, State> {
@@ -41,7 +47,8 @@ export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>
       selectedFeeder: '',
       reach: '',
       station: '',
-      message: ''
+      message: '',
+      jimuMapView: null
     }
   }
 
@@ -55,6 +62,10 @@ export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>
         this.setState({ message: 'Error loading feeders: ' + errorMessage })
       }
     }
+  }
+
+  onActiveViewChange = (jmv: JimuMapView) => {
+    this.setState({ jimuMapView: jmv })
   }
 
   onFeederChange = (evt: React.ChangeEvent<HTMLSelectElement>) => {
@@ -112,7 +123,39 @@ export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>
 
         console.log('Found locations (Original):', results)
         console.log('Found locations (Projected):', projectedPoints)
-        this.setState({ message: `Success! Found ${results.length} location(s). See console for details.` })
+        this.setState({ message: `Success! Found ${results.length} location(s).` })
+
+        // Map Visualization
+        if (this.state.jimuMapView && this.state.jimuMapView.view) {
+          const view = this.state.jimuMapView.view
+
+          let graphicsLayer = view.map.layers.find((l: Layer) => l.title === 'GoToStation Results') as GraphicsLayer
+          if (!graphicsLayer) {
+            graphicsLayer = new GraphicsLayer({ title: 'GoToStation Results', listMode: 'hide' })
+            view.map.add(graphicsLayer)
+          }
+          graphicsLayer.removeAll()
+
+          const graphics = projectedPoints.map(point => new Graphic({
+            geometry: point,
+            symbol: new SimpleMarkerSymbol({
+              style: 'circle',
+              color: [0, 255, 255, 0.8],
+              size: '12px',
+              outline: {
+                color: [0, 0, 0, 0.5],
+                width: 1
+              }
+            })
+          }))
+
+          graphicsLayer.addMany(graphics)
+
+          view.goTo({
+            target: graphics,
+            zoom: 16
+          })
+        }
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error)
@@ -123,6 +166,12 @@ export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>
   render() {
     return (
       <div className="widget-go-to-station jimu-widget" style={{ padding: '1rem', overflow: 'auto' }}>
+        {Object.prototype.hasOwnProperty.call(this.props, 'useMapWidgetIds') && this.props.useMapWidgetIds && this.props.useMapWidgetIds.length === 1 && (
+          <JimuMapViewComponent
+            useMapWidgetId={this.props.useMapWidgetIds?.[0]}
+            onActiveViewChange={this.onActiveViewChange}
+          />
+        )}
         <div style={{ marginBottom: '1rem' }}>
           <Label>
             Feeder
