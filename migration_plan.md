@@ -121,6 +121,24 @@ The following phases must be executed sequentially.
         y = y1 + (y2 - y1) * ratio;
         ```
 
+4.  **Feeder Range Validation (`_selectionChange` equivalent)**:
+    -   **Context**: The legacy widget validates if a user's entered Station is within valid bounds for the selected Feeder.
+    -   **Trigger**: `useEffect` dependent on `state.selectedFeeder`.
+    -   **Query**: Use `esri/rest/query.executeQueryJSON`.
+        -   Target: `config.feederLayerUrl` (Legacy `feeder_layer.url`).
+        -   Params:
+            -   `where`: `FFCODE = '${selectedFeeder}'`.
+            -   `outStatistics`:
+                ```javascript
+                [
+                  { statisticType: "min", onStatisticField: "STATION1", outStatisticFieldName: "MIN_STATION" },
+                  { statisticType: "max", onStatisticField: "STATION2", outStatisticFieldName: "MAX_STATION" }
+                ]
+                ```
+    -   **State**: Store `minValidStation` and `maxValidStation` in component state.
+    -   **UI Feedback**: Display "(Valid values: X - Y)" near the input (Legacy behavior).
+    -   **Validation**: In `onGoClick`, check `if (station < min || station > max)` before proceeding. Return error message if invalid.
+
 ### Phase 5: Map Integration
 **Goal**: Visualize the result.
 

@@ -1,101 +1,54 @@
-# Demo class widget
-This sample demonstrates how to create a widget using a class component.
+# Go To Station Widget
 
-## How to use the sample
-Clone the [sample repo](https://github.com/esri/arcgis-experience-builder-sdk-resources) and copy this widget's folder (within `widgets`) to the `client/your-extensions/widgets` folder of your Experience Builder installation.
+This widget ports the "Go To Station" functionality from Web AppBuilder to ArcGIS Experience Builder. It allows users to select a pipeline feeder, enter a station number, and zoom to that location on the map.
 
-## How it works
-This example creates a simple class widget to highlight some of the props you can use from a theme to return a widgets props. It also demonstrates how to style a button and component. The widget extends the `React.PureComponent` class with the types `AllWidgetProps` and `IMConfig`. The `AllWidgetProps` uses props of the widget and props injected by the `jimu` framework. The `IMConfig` is used to work with the `config.ts`.
+## 🚀 Deployment to Experience Builder Developer Edition
 
-The `render` method is used to call what the widget needs to display. For example, `StyledButton` uses the color variable from the `Theme` variables to style a button. `StyledBSButton` uses the button component from the Experience Builder framework. `propsTr` will return the props of the widget.   
-```javascript
+To deploy this widget to your on-premise Experience Builder Developer Edition:
 
-  render(){
-    const StyledButton = styled.button`
-      color: white;
-      background-color: ${this.props.theme.colors.primary.light};
-      transition: 0.15s ease-in all;
-      &:hover {
-        background-color: ${this.props.theme.colors.primary.dark};
-      }
-    `;
+1.  **Locate Extensions Folder**:
+    Navigate to your Experience Builder installation directory:
+    `.../ArcGISExperienceBuilder/client/your-extensions/widgets/`
 
-    const StyledBSButton = styled(Button)`
-      background-color: hotpink !important;
-      border: 0 !important;
-      transition: 0.15s ease-in all;
-      &:hover {
-        background-color: purple !important;
-      }
-    `;
- 
-    const propsTr = Object.keys(this.props).map((prop, i) => {
-      if(['manifest', 'user', 'intl'].indexOf(prop) > -1
-        || typeof this.props[prop] === 'string'){
-        return <tr key={i}><td>{prop}</td><td>{this.props[prop] && this.props[prop].toString()}</td></tr>;
-      }
+2.  **Copy Widget**:
+    Copy the entire `WidgetTemplate` folder from this repository into the widgets directory.
+    *Recommendation: Rename the folder from `WidgetTemplate` to `go-to-station`.*
 
-      return <tr key={i}>
-        <td>{prop}</td>
-        <td>
-          {
-            JSON.stringify(this.props[prop], null, 2)
-          }
-        </td></tr>;
-    });
-```
+3.  **Install Dependencies**:
+    Open a terminal in the new widget folder and run:
+    ```bash
+    npm install
+    ```
 
-The `return` statement is in the `render` method and is the output. Additionally, this shows how to use
-`Theme` variables within the markup and making use of a `jimuCoreDefaultMessage` and an example of formatting a default message as a
-`FormattedMessage`.
-``` javascript
-    return <div className="widget-demo jimu-widget" style={{ overflow: 'auto' }}>
-      <Tabs>
-        <Tab id="widgetProperties" title={this.nls('widgetProperties')} defaultActive={true}>
-          <div className="title font-weight-bold">NLS messages from jimu-core (OK)</div>
-          <div className="content"><FormattedMessage id="ok" defaultMessage={jimuCoreDefaultMessage.ok}></FormattedMessage></div>
-          <hr />
-          {/* demo how to use theme variables */}
-          <div css={styleLiteral}><span css={styleObject}>Theme danger color</span></div>
-          <br />
+4.  **Restart Server**:
+    Restart your Experience Builder client server (`npm start` in the `client` root).
 
-          <StyledButton>A styled HTML Button</StyledButton>
-          <br />
-          <br />
+5.  **Configure in Builder**:
+    -   Open an Experience.
+    -   Add the **Go To Station** widget from the "Custom" section.
+    -   In the Settings panel, populate the Service URLs.
 
-          <StyledBSButton>A Re-styled Button Component</StyledBSButton>
-          <br />
-          <br />
+### ⚙️ Configuration Reference (Legacy Mapping)
 
-          <div css={rtlStyle}>right to left demo</div>
-          <br />
-          <br />
+Use the values from your legacy `config.json` to populate the Experience Builder settings:
 
-          <style>
-            {styleTag}
-          </style>
-          <p className="danger-color">
-            Text color is from a named CSS class
-          </p>
-          {/* demo how to format string by call API */}
-          <div className="title font-weight-bold"><FormattedMessage id="widgetName" defaultMessage={defaultMessages.widgetName} /></div>
-          <div className="content">{this.props.intl.formatMessage({ id: '_widgetLabel', defaultMessage: defaultMessages._widgetLabel })}</div>
+| Experience Builder Setting | Legacy Config Key | Example Value |
+| :--- | :--- | :--- |
+| **Feeder Name URL** | `feeder_names.url` | `.../MapServer/0` |
+| **Feeder Detail URL** | `feeder_layer.url` | `.../FeatureServer/0` |
+| **Route Layer URL** | `route_layer.url` | `.../FeatureServer/1` |
 
-          <div className="title font-weight-bold"><FormattedMessage id="widgetProps" defaultMessage={defaultMessages.widgetProps} /></div>
-          <div className="content">
-            <table>
-              <tbody>{propsTr}</tbody>
-            </table>
-          </div>
-        </Tab>
-        <Tab id="widgetFunctions" title={this.nls('widgetFunctions')}>
-          <p>TODO</p>
-        </Tab>
-      </Tabs>
-    </div>;
-  }
-}
-````
+---
 
+## 🛠 Development
 
+### Project Structure
+- `src/runtime/`: Main widget logic (React).
+- `src/setting/`: Builder configuration panel.
+- `src/config.ts`: Configuration interface definition.
 
+### Commands
+- `npm start`: Compile code in watch mode.
+- `npm run build`: Build for production.
+- `npm test`: Run unit tests.
+- `npm run lint`: Run ESLint.
