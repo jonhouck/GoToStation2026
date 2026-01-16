@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi } from 'vitest'
-import { getFeeders } from '../WidgetTemplate/src/runtime/services/feederService'
+import { getFeeders, getFeederRange } from '../WidgetTemplate/src/runtime/services/feederService'
 import * as query from '@arcgis/core/rest/query'
 
 // Mock executeQueryJSON
@@ -14,6 +14,7 @@ vi.mock('@arcgis/core/rest/support/Query', () => {
         default: class {
             where = ''
             outFields = []
+            outStatistics = []
             returnDistinctValues = false
             returnGeometry = false
         }
@@ -53,4 +54,36 @@ describe('feederService', () => {
         vi.mocked(query.executeQueryJSON).mockRejectedValue(new Error('Network error'))
         await expect(getFeeders('http://mock-url')).rejects.toThrow('Network error')
     })
+
+    describe('getFeederRange', () => {
+        it('fetches and returns min/max station range', async () => {
+            const mockResults = {
+                features: [
+                    { attributes: { MIN_STATION: 100, MAX_STATION: 2000 } }
+                ]
+            }
+
+            vi.mocked(query.executeQueryJSON).mockResolvedValue(mockResults as any)
+
+            const range = await getFeederRange('http://mock-layer', 'FeederA')
+
+            expect(query.executeQueryJSON).toHaveBeenCalled()
+            expect(range).toEqual({ min: 100, max: 2000 })
+        })
+
+        it('returns null if no features found', async () => {
+            vi.mocked(query.executeQueryJSON).mockResolvedValue({ features: [] } as any)
+            const range = await getFeederRange('http://mock-layer', 'FeederA')
+            expect(range).toBeNull()
+        })
+
+        it('returns null if attributes are missing/invalid', async () => {
+            vi.mocked(query.executeQueryJSON).mockResolvedValue({
+                features: [{ attributes: { MIN_STATION: null, MAX_STATION: null } }]
+            } as any)
+            const range = await getFeederRange('http://mock-layer', 'FeederA')
+            expect(range).toBeNull()
+        })
+    })
 })
+

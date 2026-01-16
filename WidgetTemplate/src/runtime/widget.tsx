@@ -20,7 +20,7 @@
 import { React, type AllWidgetProps } from 'jimu-core'
 import type { IMConfig } from '../config'
 import { Select, Option, TextInput, Button, Label } from 'jimu-ui'
-import { getFeeders } from './services/feederService'
+import { getFeeders, getFeederRange } from './services/feederService'
 import { findStationOnRoute } from './services/routeService'
 import { projectPoint } from './services/geometryUtils'
 import SpatialReference from '@arcgis/core/geometry/SpatialReference'
@@ -36,6 +36,8 @@ interface State {
   reach: string
   station: string
   message: string
+  minValidStation: number | null
+  maxValidStation: number | null
   jimuMapView: JimuMapView
 }
 
@@ -48,6 +50,8 @@ export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>
       reach: '',
       station: '',
       message: '',
+      minValidStation: null,
+      maxValidStation: null,
       jimuMapView: null
     }
   }
@@ -68,8 +72,23 @@ export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>
     this.setState({ jimuMapView: jmv })
   }
 
-  onFeederChange = (evt: React.ChangeEvent<HTMLSelectElement>) => {
-    this.setState({ selectedFeeder: evt.target.value })
+  onFeederChange = async (evt: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedFeeder = evt.target.value
+    this.setState({ selectedFeeder, minValidStation: null, maxValidStation: null, message: '' })
+
+    if (selectedFeeder && this.props.config.feederLayerUrl) {
+      try {
+        const range = await getFeederRange(this.props.config.feederLayerUrl, selectedFeeder)
+        if (range) {
+          this.setState({
+            minValidStation: range.min,
+            maxValidStation: range.max
+          })
+        }
+      } catch (error) {
+        console.error('Error fetching range:', error)
+      }
+    }
   }
 
   onReachChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,7 +100,7 @@ export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>
   }
 
   onGoClick = async () => {
-    const { selectedFeeder, reach, station } = this.state
+    const { selectedFeeder, reach, station, minValidStation, maxValidStation } = this.state
 
     if (!selectedFeeder || !station) {
       this.setState({ message: 'Please select a feeder and enter a station.' })
@@ -92,6 +111,16 @@ export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>
     if (isNaN(cleanStation)) {
       this.setState({ message: 'Invalid station value.' })
       return
+    }
+
+    // Range Validation
+    if (minValidStation !== null && maxValidStation !== null) {
+      if (cleanStation < minValidStation || cleanStation > maxValidStation) {
+        this.setState({
+          message: `Invalid station. Must be between ${minValidStation} and ${maxValidStation}.`
+        })
+        return
+      }
     }
 
     this.setState({ message: 'Searching...' })
@@ -213,6 +242,11 @@ export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>
               style={{ width: '100%', marginTop: '0.25rem' }}
             />
           </Label>
+          {this.state.minValidStation !== null && this.state.maxValidStation !== null && (
+            <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '0.25rem' }}>
+              Valid values: {this.state.minValidStation} - {this.state.maxValidStation}
+            </div>
+          )}
         </div>
 
         <div style={{ marginBottom: '1rem' }}>

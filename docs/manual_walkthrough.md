@@ -104,6 +104,21 @@ Verify that the project infrastructure is correctly set up and ready for develop
     - **Scenario C**: Invalid Station.
         - Expected: "Invalid station value" message.
 
+    - **Scenario C**: Invalid Station.
+        - Expected: "Invalid station value" message.
+
+### Phase 4.4: Feeder Range Validation
+1.  **Automated Verification**:
+    - Run `npm test`.
+    - Ensure `tests/feederService.test.ts` and `tests/widget_ui.test.tsx` pass.
+
+2.  **Manual Verification**:
+    - Select a Feeder known to have a range (e.g., Feeder A).
+    - **Verify**: Text "Valid values: [Min] - [Max]" appears below the Station input.
+    - **Scenario**: Enter a station outside this range (e.g., 99999).
+    - Click Go.
+    - **Verify**: Error message "Invalid station. Must be between [Min] and [Max]" appears. Search is NOT executed.
+
 ### Phase 4.3: Coordinate Projection
 1.  **Automated Verification**:
     - Run `npm test`.

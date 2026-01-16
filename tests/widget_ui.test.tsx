@@ -20,7 +20,8 @@ vi.mock('../WidgetTemplate/src/runtime/services/feederService', () => ({
         return Promise.resolve([
             { label: 'Mock Feeder', value: 'mock' }
         ])
-    })
+    }),
+    getFeederRange: vi.fn()
 }))
 
 vi.mock('../WidgetTemplate/src/runtime/services/routeService', () => ({
@@ -96,5 +97,37 @@ describe('Widget UI', () => {
         // Since findStationOnRoute mocks returning [], we expect the "Could not find" message
         // We use findByText to wait for the async state update
         expect(await screen.findByText(/Could not find reach/)).toBeDefined()
+    })
+
+    it('validates station range', async () => {
+        const props: any = {
+            config: { feederUrl: 'mock', feederLayerUrl: 'mockLayer' },
+            theme: {}
+        }
+
+        // Mock range response using the imported mock
+        const { getFeederRange } = await import('../WidgetTemplate/src/runtime/services/feederService')
+            ; (getFeederRange as any).mockResolvedValue({ min: 100, max: 2000 })
+
+        const { getByText, findByText, getAllByTestId, getByTestId } = render(<Widget {...props} /> as any)
+
+        // Wait for feeders
+        await findByText('Mock Feeder')
+
+        // Select Feeder
+        fireEvent.change(getByTestId('select'), { target: { value: 'mock' } })
+
+        // Check if range is displayed (async)
+        expect(await findByText('Valid values: 100 - 2000')).toBeDefined()
+
+        // Enter invalid station
+        const stationInput = getAllByTestId('text-input')[1]
+        fireEvent.change(stationInput, { target: { value: '9999' } })
+
+        // Click Go
+        fireEvent.click(getByText('Go'))
+
+        // Check error message
+        expect(await findByText('Invalid station. Must be between 100 and 2000.')).toBeDefined()
     })
 })
