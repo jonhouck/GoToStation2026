@@ -192,6 +192,18 @@ export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>
     }
   }
 
+  formatStation(inNumber: number): string {
+    const twoDecimalNumber = parseFloat((Math.round(inNumber * 100) / 100).toString()).toFixed(2)
+    let text = twoDecimalNumber.toString()
+
+    const pad = '000000'
+    text = pad.substring(0, pad.length - text.length) + text
+
+    const rightSideIndex = text.indexOf('.') > -1 ? text.indexOf('.') : text.length
+    const retValue = text.slice(0, rightSideIndex - 2) + '+' + text.slice(rightSideIndex - 2)
+    return retValue
+  }
+
   render() {
     return (
       <div className="widget-go-to-station jimu-widget" style={{ padding: '1rem', overflow: 'auto' }}>
@@ -244,7 +256,7 @@ export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>
           </Label>
           {this.state.minValidStation !== null && this.state.maxValidStation !== null && (
             <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '0.25rem' }}>
-              Valid values: {this.state.minValidStation} - {this.state.maxValidStation}
+              Valid values: {this.formatStation(this.state.minValidStation)} - {this.formatStation(this.state.maxValidStation)}
             </div>
           )}
         </div>
