@@ -3,8 +3,6 @@ import { describe, it, expect, vi } from 'vitest'
 import { projectPoint } from '../WidgetTemplate/src/runtime/services/geometryUtils'
 import * as projection from '@arcgis/core/geometry/projection'
 import * as geometryService from '@arcgis/core/rest/geometryService'
-import Point from '@arcgis/core/geometry/Point'
-import SpatialReference from '@arcgis/core/geometry/SpatialReference'
 
 // Mock 4.x modules
 vi.mock('@arcgis/core/geometry/projection', () => ({
