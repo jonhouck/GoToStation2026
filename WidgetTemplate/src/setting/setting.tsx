@@ -1,6 +1,6 @@
 import { React } from 'jimu-core'
 import type { AllWidgetSettingProps } from 'jimu-for-builder'
-import { SettingSection, SettingRow } from 'jimu-ui/advanced/setting-components'
+import { SettingSection, SettingRow, MapWidgetSelector } from 'jimu-ui/advanced/setting-components'
 import { TextInput } from 'jimu-ui'
 import type { IMConfig } from '../config'
 import defaultMessages from './translations/default'
@@ -10,6 +10,13 @@ export default class Setting extends React.PureComponent<AllWidgetSettingProps<I
     this.props.onSettingChange({
       id: this.props.id,
       config: this.props.config.set(key, value)
+    })
+  }
+
+  onMapWidgetSelected = (useMapWidgetIds: string[]) => {
+    this.props.onSettingChange({
+      id: this.props.id,
+      useMapWidgetIds: useMapWidgetIds
     })
   }
 
@@ -27,6 +34,15 @@ export default class Setting extends React.PureComponent<AllWidgetSettingProps<I
 
   render() {
     return <div className="widget-setting-demo">
+      <SettingSection title="Map">
+        <SettingRow>
+          <MapWidgetSelector
+            onSelect={this.onMapWidgetSelected}
+            useMapWidgetIds={this.props.useMapWidgetIds}
+          />
+        </SettingRow>
+      </SettingSection>
+
       <SettingSection title="Map Services">
         <SettingRow label={defaultMessages.feederUrl}>
           <TextInput

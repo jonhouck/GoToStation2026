@@ -13,7 +13,8 @@ vi.mock('jimu-ui', () => ({
 // Mock setting components
 vi.mock('jimu-ui/advanced/setting-components', () => ({
     SettingSection: ({ children, title }: { children: React.ReactNode; title: string }) => <div title={title}>{children}</div>,
-    SettingRow: ({ children, label }: { children: React.ReactNode; label: string }) => <div><label>{label}</label>{children}</div>
+    SettingRow: ({ children, label }: { children: React.ReactNode; label: string }) => <div><label>{label}</label>{children}</div>,
+    MapWidgetSelector: (props: any) => <button onClick={() => props.onSelect(['map1'])}>Select Map</button>
 }))
 
 describe('Setting Component', () => {

@@ -115,3 +115,25 @@ Verify that the project infrastructure is correctly set up and ready for develop
         - Look for "Found locations (Original)" log.
         - Look for "Found locations (Projected)" log.
         - Verify the Projected points have `wkid: 102100` (Web Mercator).
+
+## Phase 5 Verification: Map Integration
+
+1.  **Automated Verification**:
+    - Run `npm test`.
+    - Ensure `tests/widget_map.test.tsx` passes.
+    - Confirm that `JimuMapViewComponent` and `GraphicsLayer` interactions are verified.
+
+2.  **Manual Verification**:
+    - **Prerequisites**:
+        - Widget is configured with valid Service URLs.
+        - Widget is added to an Experience page that also has a **Map Widget**.
+    - **Configuration**:
+        - Open Widget Settings.
+        - **Select Map Widget**: Choose the Map Widget from the dropdown.
+    - **Execution**:
+        - Select Feeder, Enter Station, Click Go.
+    - **Verification**:
+        - **Zoom**: The map view should automatically pan and zoom (Level 16) to the calculated location.
+        - **Graphic**: A cyan circle (SimpleMarkerSymbol) should appear at the location.
+        - **Popup**: (Optional) Clicking the graphic might not show a popup yet unless explicitly implemented, but the visual marker confirms the graphic was added.
+
