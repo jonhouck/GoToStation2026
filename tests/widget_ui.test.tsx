@@ -118,7 +118,7 @@ describe('Widget UI', () => {
         fireEvent.change(getByTestId('select'), { target: { value: 'mock' } })
 
         // Check if range is displayed (async)
-        expect(await findByText('Valid values: 100 - 2000')).toBeDefined()
+        expect(await findByText('Valid values: 1+00.00 - 20+00.00')).toBeDefined()
 
         // Enter invalid station
         const stationInput = getAllByTestId('text-input')[1]
@@ -128,6 +128,6 @@ describe('Widget UI', () => {
         fireEvent.click(getByText('Go'))
 
         // Check error message
-        expect(await findByText('Invalid station. Must be between 100 and 2000.')).toBeDefined()
+        expect(await findByText('Invalid station. Must be between 1+00.00 and 20+00.00.')).toBeDefined()
     })
 })
