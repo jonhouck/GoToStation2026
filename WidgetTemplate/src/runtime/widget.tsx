@@ -117,7 +117,7 @@ export default class Widget extends React.PureComponent<AllWidgetProps<IMConfig>
     if (minValidStation !== null && maxValidStation !== null) {
       if (cleanStation < minValidStation || cleanStation > maxValidStation) {
         this.setState({
-          message: `Invalid station. Must be between ${minValidStation} and ${maxValidStation}.`
+          message: `Invalid station. Must be between ${this.formatStation(minValidStation)} and ${this.formatStation(maxValidStation)}.`
         })
         return
       }
